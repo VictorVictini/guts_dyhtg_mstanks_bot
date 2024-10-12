@@ -18,6 +18,9 @@ namespace Simple
         private const int port = Constant.Port;
         private string tankName;
         private GameObjectState ourMostRecentState;
+        private GameObjectState enemyMostRecentState;
+        private int cntDwn; //how many times it may use an old coordinate before making it null
+        private bool goToGoal = false;
 
         //Our TCP client.
         private TcpClient client;
@@ -182,14 +185,21 @@ namespace Simple
 
                     if (objectState.Name == tankName)
                         ourMostRecentState = objectState;
+                    else if(objectState.Type == "Tank")
+                    {
+                        enemyMostRecentState = objectState;
+                        cntDwn = 100;
+                    }
                 }
 
                 else
                 {
                     // snitchPickup
                     // {"Id":-2896}
-                    Console.WriteLine(messageType.ToString());
+                    Console.WriteLine("{" + messageType.ToString() + "}");
                     Console.WriteLine(jsonPayload);
+                    if(messageType.ToString() == "kill")
+                        goToGoal = true;
                 }
             }
             catch (Exception e)
@@ -223,38 +233,50 @@ namespace Simple
                 var nextMessage = incomingMessages.Dequeue();
                 DecodeMessage((NetworkMessageType)nextMessage[0], nextMessage[1], nextMessage);
             }
-
+            
+            if(goToGoal)
+            {
+                Console.WriteLine("GO TO GOAL ASSHOLE");
+                float targetGoal = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, 100, 0);
+                SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetGoal));
+                float goalPos = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 100, 0);
+                SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, goalPos));
+                goToGoal = false;
+                return;
+            }
             // wait until we get our first state update from the server
             if (ourMostRecentState != null)
             {
                 // TODO AI SHID HERE
-
-                /*//let's turn the tanks turret towards a random point.
-                var randomTurretX = random.Next(-100, 100);
-                var randomTurretY = random.Next(-100, 100);
+                if(enemyMostRecentState == null)
+                {
+                    SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.toggleTurretLeft));
+                    return;
+                }
+                else
+                    SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
 
                 //let's turn the tanks turret towards a random point.
-                float targetHeading = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, randomTurretX, randomTurretY);
+                float targetHeading = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
                 SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnTurretToHeading, targetHeading));
 
 
-                Thread.Sleep(2000);
+                Thread.Sleep(20);
 
 
                 //now let's turn the whole vehicle towards a different random point.
-                var randomX = random.Next(-100, 100);
-                var randomY = random.Next(-100, 100);
-                float targetHeading2 = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, randomX, randomY);
+                float targetHeading2 = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
                 SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetHeading2));
-                Thread.Sleep(2000);
+                Thread.Sleep(20);
 
-
+                SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.fire));
 
                 //now let's move to that point.
-                float distance = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, randomX, randomY);
+                float distance = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
                 SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, distance));
-
-                testMovementsPerformed = true;*/
+                
+                if(cntDwn-- <= 0)
+                    enemyMostRecentState = null;
             }
 
         }
