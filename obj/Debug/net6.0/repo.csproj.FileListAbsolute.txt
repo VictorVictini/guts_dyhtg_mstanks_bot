@@ -1,0 +1,17 @@
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.csproj.AssemblyReference.cache
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.AssemblyInfoInputs.cache
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.AssemblyInfo.cs
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.csproj.CoreCompileInputs.cache
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\bin\Debug\net6.0\repo.exe
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\bin\Debug\net6.0\repo.deps.json
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\bin\Debug\net6.0\repo.runtimeconfig.json
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\bin\Debug\net6.0\repo.dll
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\bin\Debug\net6.0\repo.pdb
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.csproj.CopyComplete
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.dll
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\refint\repo.dll
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.pdb
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.genruntimeconfig.cache
+C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\ref\repo.dll
