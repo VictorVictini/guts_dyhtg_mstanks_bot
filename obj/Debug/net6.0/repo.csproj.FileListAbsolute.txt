@@ -15,3 +15,21 @@ C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\refint\repo
 C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.pdb
 C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\repo.genruntimeconfig.cache
 C:\Users\Danyal\Documents\Hackathons\DYHTG2024\repo\obj\Debug\net6.0\ref\repo.dll
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\bin\Debug\net6.0\repo.exe
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\bin\Debug\net6.0\repo.deps.json
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\bin\Debug\net6.0\repo.runtimeconfig.json
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\bin\Debug\net6.0\repo.dll
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\bin\Debug\net6.0\repo.pdb
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.csproj.AssemblyReference.cache
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.AssemblyInfoInputs.cache
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.AssemblyInfo.cs
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.csproj.CoreCompileInputs.cache
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.sourcelink.json
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.csproj.Up2Date
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.dll
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\refint\repo.dll
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.pdb
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\repo.genruntimeconfig.cache
+C:\Users\FADYF\Documents\Visual Studio 2022\Repos\guts-2024\obj\Debug\net6.0\ref\repo.dll
