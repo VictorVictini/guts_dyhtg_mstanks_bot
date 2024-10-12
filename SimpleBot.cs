@@ -14,8 +14,8 @@ namespace Simple
     /// </summary>
     public class SimpleBot
     {
-        private string ipAddress = "127.0.0.1";
-        private int port = 8052;
+        private const string ipAddress = Constant.IP;
+        private const int port = Constant.Port;
         private string tankName;
         private GameObjectState ourMostRecentState;
 
