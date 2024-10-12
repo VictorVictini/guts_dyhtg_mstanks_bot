@@ -237,11 +237,13 @@ namespace Simple
             if(goToGoal)
             {
                 Console.WriteLine("GO TO GOAL ASSHOLE");
-                float targetGoal = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, 100, 0);
+                SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
+                float targetGoal = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
                 SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetGoal));
-                float goalPos = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 100, 0);
+                float goalPos = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
                 SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, goalPos));
-                goToGoal = false;
+                if(ourMostRecentState.Y >= 100)
+                    goToGoal = false;
                 return;
             }
             // wait until we get our first state update from the server
