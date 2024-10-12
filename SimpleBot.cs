@@ -34,9 +34,9 @@ namespace Simple
 
         public bool BotQuit { get; internal set; }
 
-        public SimpleBot(string name = "test:SimpleBot1")
+        public SimpleBot(string name)
         {
-            tankName = name;
+            tankName = Constant.TeamName + ":" + name;
             incomingMessages = new Queue<byte[]>();
 
             ConnectToTcpServer();
