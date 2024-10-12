@@ -256,7 +256,10 @@ namespace Simple
                     return;
                 }
                 else
+                {
+                    if (enemyMostRecentState.Name.Split(":")[0] == Constant.TeamName) return;
                     SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
+                }
 
                 //let's turn the tanks turret towards a random point.
                 float targetHeading = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
