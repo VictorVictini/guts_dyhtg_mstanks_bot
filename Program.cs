@@ -15,6 +15,7 @@ namespace Simple
                 bot.Update();
 
                 //run at 60Hz
+                //testing
                 Thread.Sleep(16);
 
             }
