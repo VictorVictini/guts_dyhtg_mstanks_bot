@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System.Text;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 
 namespace Simple
@@ -14,10 +14,12 @@ namespace Simple
     /// </summary>
     public class SimpleBot
     {
-        private const string ipAddress = Constant.IP;
-        private const int port = Constant.Port;
+        private const string ipAddress = constant.IP;
+        private const int port = constant.Port;
         private string tankName;
         private GameObjectState ourMostRecentState;
+        private Random random;
+        private bool testMovementsPerformed = false;
 
         private GameObjectState enemyMostRecentState;
 
@@ -33,16 +35,34 @@ namespace Simple
 
         public bool BotQuit { get; internal set; }
 
-        public SimpleBot(string name = "test:SimpleBot1")
+        public SimpleBot(string name = "SimpleBot1")
         {
             tankName = name;
+
+            random = new Random();
+
             incomingMessages = new Queue<byte[]>();
 
             ConnectToTcpServer();
+
+            //wait for a bit to allow connection to establish before proceeding.
+            Thread.Sleep(5000);
+
+
+            SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.test));
+
+
+            //send the create tank request.
+            SendMessage(MessageFactory.CreateTankMessage(tankName));
+
+            //conduct basic movement requests.
+            DoAPITest();
+
+
         }
 
 
-        /*private void DoAPITest()
+        private void DoAPITest()
         {
             int millisecondSleepTime = 500;
             Thread.Sleep(millisecondSleepTime);
@@ -77,8 +97,10 @@ namespace Simple
 
             SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.fire));
 
+
+
+
         }
-        */
 
 
         private void ConnectToTcpServer()
@@ -102,8 +124,6 @@ namespace Simple
             {
                 client = new TcpClient(ipAddress, port);
 
-                //send the create tank request.
-                SendMessage(MessageFactory.CreateTankMessage(tankName));
 
                 // Get a stream object for reading 				
                 using (NetworkStream stream = client.GetStream())
@@ -134,6 +154,7 @@ namespace Simple
                         }
                         else
                         {
+
                             //no JSON
                             lock (incomingMessages)
                             {
@@ -142,9 +163,13 @@ namespace Simple
                                 zeroPayloadMessage[1] = 0;
                                 incomingMessages.Enqueue(zeroPayloadMessage);
                             }
+
                         }
+
                     }
+
                 }
+
             }
             catch (SocketException socketException)
             {
@@ -159,9 +184,11 @@ namespace Simple
 
             int chunk;
             while ((chunk = stream.Read(buffer, read, buffer.Length - read)) > 0)
+            {
                 read += chunk;
-
+            }
             return buffer;
+
         }
 
         private void DecodeMessage(NetworkMessageType messageType, int payloadLength, byte[] bytes)
@@ -177,10 +204,15 @@ namespace Simple
                     
                 }
 
+                if (messageType == NetworkMessageType.test)
+                {
+                    Console.WriteLine("TEST ACK RECEIVED");
+                }
+
                 if (messageType == NetworkMessageType.objectUpdate)
                 {
                     GameObjectState objectState = JsonConvert.DeserializeObject<GameObjectState>(jsonPayload);
-                    Console.WriteLine("ID: " + objectState.Id + " Type: " + objectState.Type + " Name: " + objectState.Name + " ---- " + objectState.X + "," + objectState.Y + " : " + objectState.Heading + " : " + objectState.TurretHeading);
+                    //Console.WriteLine("ID: " + objectState.Id + " Type: " + objectState.Type + " Name: " + objectState.Name + " ---- " + objectState.X + "," + objectState.Y + " : " + objectState.Heading + " : " + objectState.TurretHeading);
 
                     if (objectState.Name == tankName)
                         ourMostRecentState = objectState;
@@ -192,29 +224,33 @@ namespace Simple
 
                 else
                 {
-                    // snitchPickup
-                    // {"Id":-2896}
                     Console.WriteLine(messageType.ToString());
                     Console.WriteLine(jsonPayload);
                 }
+
             }
             catch (Exception e)
             {
                 Console.WriteLine("Message decode exception " + e);
             }
+
         }
 
         private void SendMessage(byte[] message)
         {
             if (client == null)
+            {
                 return;
-
+            }
             try
             {
                 // Get a stream object for writing. 			
                 NetworkStream stream = client.GetStream();
                 if (stream.CanWrite)
+                {
                     stream.Write(message, 0, message.Length);
+
+                }
             }
             catch (SocketException socketException)
             {
@@ -224,11 +260,13 @@ namespace Simple
 
         public void Update()
         {
+
             if (incomingMessages.Count > 0)
             {
                 var nextMessage = incomingMessages.Dequeue();
                 DecodeMessage((NetworkMessageType)nextMessage[0], nextMessage[1], nextMessage);
             }
+
 
             // wait until we get our first state update from the server
             if (ourMostRecentState != null)
@@ -243,6 +281,7 @@ namespace Simple
                     SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
 
                 //let's turn the tanks turret towards a random point.
+
 
                 //let's turn the tanks turret towards a random point.
                 float targetHeading = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
@@ -262,8 +301,9 @@ namespace Simple
                 //now let's move to that point.
                 float distance = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
                 SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, distance));
-
+              
                 enemyMostRecentState = null;
+
             }
 
         }
@@ -272,7 +312,6 @@ namespace Simple
         {
             float headingX = otherX - ownX;
             float headingY = otherY - ownY;
-
             return (float)Math.Sqrt((headingX * headingX) + (headingY * headingY));
         }
 
@@ -282,10 +321,12 @@ namespace Simple
             if (Math.Abs(turretDiff) < 5)
             {
                 SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
+
             }
             else if (IsTurnLeft(ourMostRecentState.TurretHeading, targetHeading))
             {
                 SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.toggleTurretLeft));
+
             }
             else if (!IsTurnLeft(ourMostRecentState.TurretHeading, targetHeading))
             {
@@ -298,8 +339,8 @@ namespace Simple
             float heading = (float)Math.Atan2(y2 - y1, x2 - x1);
             heading = (float)RadianToDegree(heading);
             heading = (heading - 360) % 360;
-
             return Math.Abs(heading);
+
         }
 
         private double RadianToDegree(double angle)
@@ -312,5 +353,97 @@ namespace Simple
             float diff = desiredHeading - currentHeading;
             return diff > 0 ? diff > 180 : diff >= -180;
         }
+
+
     }
+
+    public static class MessageFactory
+    {
+
+        public static byte[] CreateTankMessage(string name)
+        {
+
+            string json = JsonConvert.SerializeObject(new { Name = name });
+            byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(json);
+            return AddTypeAndLengthToArray(clientMessageAsByteArray, (byte)NetworkMessageType.createTank);
+        }
+
+        public static byte[] CreateMovementMessage(NetworkMessageType type, float amount)
+        {
+            string json = JsonConvert.SerializeObject(new { Amount = amount });
+            byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(json);
+            return AddTypeAndLengthToArray(clientMessageAsByteArray, (byte)type);
+        }
+
+        public static byte[] AddTypeAndLengthToArray(byte[] bArray, byte type)
+        {
+            byte[] newArray = new byte[bArray.Length + 2];
+            bArray.CopyTo(newArray, 2);
+            newArray[0] = type;
+            newArray[1] = (byte)bArray.Length;
+            return newArray;
+        }
+
+        public static byte[] CreateZeroPayloadMessage(NetworkMessageType type)
+        {
+
+            byte[] message = new byte[2];
+            message[0] = (byte)type;
+            message[1] = 0;
+            return message;
+        }
+
+
+    }
+
+    public enum NetworkMessageType
+    {
+        test = 0,
+        createTank = 1,
+        despawnTank = 2,
+        fire = 3,
+        toggleForward = 4,
+        toggleReverse = 5,
+        toggleLeft = 6,
+        toggleRight = 7,
+        toggleTurretLeft = 8,
+        toggleTurretRight = 9,
+        turnTurretToHeading = 10,
+        turnToHeading = 11,
+        moveForwardDistance = 12,
+        moveBackwardsDistance = 13,
+        stopAll = 14,
+        stopTurn = 15,
+        stopMove = 16,
+        stopTurret = 17,
+        objectUpdate = 18,
+        healthPickup = 19,
+        ammoPickup = 20,
+        snitchPickup = 21,
+        destroyed = 22,
+        enteredGoal = 23,
+        kill = 24,
+        snitchAppeared = 25,
+        gameTimeUpdate = 26,
+        hitDetected = 27,
+        successfulHit =28
+
+    }
+
+    public class GameObjectState
+    {
+        public int Id;
+        public string Name;
+        public string Type;
+        public float X;
+        public float Y;
+        public float Heading;
+        public float TurretHeading;
+        public int Health;
+        public int Ammo;
+    }
+
+
+
+
 }
