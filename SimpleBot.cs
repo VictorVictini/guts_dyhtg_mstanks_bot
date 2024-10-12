@@ -140,13 +140,9 @@ namespace Simple
                                 zeroPayloadMessage[1] = 0;
                                 incomingMessages.Enqueue(zeroPayloadMessage);
                             }
-
                         }
-
                     }
-
                 }
-
             }
             catch (SocketException socketException)
             {
@@ -164,7 +160,6 @@ namespace Simple
                 read += chunk;
 
             return buffer;
-
         }
 
         private void DecodeMessage(NetworkMessageType messageType, int payloadLength, byte[] bytes)
@@ -196,13 +191,11 @@ namespace Simple
                     Console.WriteLine(messageType.ToString());
                     Console.WriteLine(jsonPayload);
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine("Message decode exception " + e);
             }
-
         }
 
         private void SendMessage(byte[] message)
@@ -270,7 +263,7 @@ namespace Simple
         {
             float headingX = otherX - ownX;
             float headingY = otherY - ownY;
-            
+
             return (float)Math.Sqrt((headingX * headingX) + (headingY * headingY));
         }
 
