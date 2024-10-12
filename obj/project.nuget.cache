@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "hPuwbPCvMfKDjTlasw7lFQ67/Yyc5zWI3UJcK6dIY2q6k8hpDtqgpB0ZC5L/SpteIWuJhgAzqxUz80UPPgSCJg==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Danyal\\Documents\\Hackathons\\DYHTG2024\\repo\\repo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Danyal\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
