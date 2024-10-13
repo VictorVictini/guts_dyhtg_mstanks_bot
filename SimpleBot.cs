@@ -272,7 +272,7 @@ namespace Simple
             
             if(goToGoal)
             {
-                Console.WriteLine("GO TO GOAL ASSHOLE");
+                //Console.WriteLine("GO TO GOAL ASSHOLE");
                 float goal1Dist = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
                 float goal2Dist = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, -100);
 
