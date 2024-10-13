@@ -207,6 +207,13 @@ namespace Simple
                         goToGoal = true;
                     else if (messageType.ToString() == "enteredGoal")
                         goToGoal = false;
+                    else if (messageType.ToString() == "destroyed")
+                    {
+                        goToGoal = false;
+                        powerupMostRecentState = null;
+                        ourMostRecentState = null;
+                        enemyMostRecentState = null;
+                    }
                 }
             }
             catch (Exception e)
@@ -279,6 +286,7 @@ namespace Simple
 
                     if (powerupMostRecentState != null)
                     {
+                        Console.WriteLine("PICK UP POWERUP");
                         //now let's turn the whole vehicle towards a different random point.
                         //now let's turn the whole vehicle towards a different random point.
 
@@ -286,8 +294,6 @@ namespace Simple
                         float targetHeading2 = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, powerupMostRecentState.X, powerupMostRecentState.Y);
                         SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetHeading2));
                         Thread.Sleep(20);
-
-                        SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.fire));
 
                         //now let's move to that point.
                         float distance = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, powerupMostRecentState.X, powerupMostRecentState.Y);
@@ -297,12 +303,18 @@ namespace Simple
                 }
                 else
                 {
-                    if (enemyMostRecentState.Name.Split(":")[0] == Constant.TeamName) return;
+                    if (enemyMostRecentState.Name.Split(":")[0] == Constant.TeamName)
+                    {
+                        enemyMostRecentState = null;
+                        return;
+                    }
                     SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
                 }
 
                 if (powerupMostRecentState != null)
                 {
+                    
+                        Console.WriteLine("PICK UP POWERUP");
                     //let's turn the tanks turret towards a random point.
                     float targetHeading = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, enemyMostRecentState.X, enemyMostRecentState.Y);
                     SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnTurretToHeading, targetHeading));
