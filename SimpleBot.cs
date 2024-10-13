@@ -200,6 +200,8 @@ namespace Simple
                     Console.WriteLine(jsonPayload);
                     if(messageType.ToString() == "kill")
                         goToGoal = true;
+                    else if (messageType.ToString() == "enteredGoal")
+                        goToGoal = false;
                 }
             }
             catch (Exception e)
@@ -237,11 +239,26 @@ namespace Simple
             if(goToGoal)
             {
                 Console.WriteLine("GO TO GOAL ASSHOLE");
-                SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
-                float targetGoal = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
-                SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetGoal));
-                float goalPos = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
-                SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, goalPos));
+                float goal1Dist = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
+                float goal2Dist = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, -100);
+
+                if (goal1Dist <= goal2Dist)
+                {
+                    SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
+                    float targetGoal = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
+                    SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetGoal));
+                    float goalPos = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, 100);
+                    SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, goalPos));
+                }
+                else
+                {
+                    SendMessage(MessageFactory.CreateZeroPayloadMessage(NetworkMessageType.stopTurret));
+                    float targetGoal = GetHeading(ourMostRecentState.X, ourMostRecentState.Y, 0, -100);
+                    SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.turnToHeading, targetGoal));
+                    float goalPos = CalculateDistance(ourMostRecentState.X, ourMostRecentState.Y, 0, -100);
+                    SendMessage(MessageFactory.CreateMovementMessage(NetworkMessageType.moveForwardDistance, goalPos));
+                }
+
                 if(ourMostRecentState.Y >= 100)
                     goToGoal = false;
                 return;
